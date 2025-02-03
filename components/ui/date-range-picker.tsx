@@ -1,6 +1,6 @@
 "use client";
 
-import React, { type FC, useState, useEffect, useRef } from "react";
+import React, { type FC, useState, useEffect, useRef, JSX } from "react";
 import { Button } from "./button";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { Calendar } from "./calendar";
@@ -335,7 +335,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
       openedRangeRef.current = range;
       openedRangeCompareRef.current = rangeCompare;
     }
-  }, [isOpen]);
+  }, [isOpen, range, rangeCompare]);
 
   return (
     <Popover
