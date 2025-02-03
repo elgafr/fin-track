@@ -8,6 +8,7 @@ import {
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
+    getSortedRowModel,
     SortingState,
     useReactTable,
 } from "@tanstack/react-table"
@@ -49,8 +50,8 @@ const columns: ColumnDef<TransactionHistoryRow>[] = [
             <DataTableColumnHeader column={column} title="Category" />
         ),
         filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id))
-        },
+            return value.some((val: string) => val === row.getValue(id))
+        }, 
         cell: ({ row }) => <div className="flex gap-2 capitalize">
             {row.original.categoryIcon}
             <div className="capitalize">
@@ -88,8 +89,8 @@ const columns: ColumnDef<TransactionHistoryRow>[] = [
             <DataTableColumnHeader column={column} title="Type" />
         ),
         filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id))
-        },
+            return value.some((val: string) => val === row.getValue(id))
+        },        
         cell: ({ row }) => (
             <div
                 className={cn("capitalize rounded-lg text-center p-2",
@@ -145,16 +146,17 @@ const TransactionTable = ({ from, to }: TransactionTableProps) => {
         data: history.data || emptyData,
         columns,
         getCoreRowModel: getCoreRowModel(),
+        getFilteredRowModel: getFilteredRowModel(), 
+        getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
         state: {
             sorting,
             columnFilters,
         },
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
-        getSortedRowModel: getCoreRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
     })
+    
 
     const categoriesOptions = useMemo(() => {
         const categoriesMap = new Map()
@@ -164,9 +166,8 @@ const TransactionTable = ({ from, to }: TransactionTableProps) => {
                 label: `${transaction.categoryIcon} ${transaction.category}`,
             })
         })
-        const uniqueCategories = new Set(categoriesMap.values())
+        return Array.from(categoriesMap.values())
 
-        return Array.from(uniqueCategories)
     }, [history.data])
 
     return (
