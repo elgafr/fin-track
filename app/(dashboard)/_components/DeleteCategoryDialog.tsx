@@ -18,7 +18,7 @@ const DeleteCategoryDialog = ({ trigger, category }: DeleteCategoryDialogProps) 
     const deleteMutation = useMutation({
         mutationFn: DeleteCategory,
         onSuccess: async () => {
-            toast.success(`Category ${category.name} deleted successfully`, {
+            toast.success(`Category deleted successfully`, {
                 id: categoryIdentifier
             })
 
